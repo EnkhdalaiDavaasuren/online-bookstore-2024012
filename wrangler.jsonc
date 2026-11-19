@@ -1,0 +1,12 @@
+{
+    "name": "online-bookstore-2024012",
+    "main": "src/index.ts",
+    "compatibility_date": "2026-11-19",
+    "d1_databases": [
+        {
+            "binding": "DB",
+            "database_name": "bookstore-db-3",
+            "database_id": "387efc49-253d-401a-b390-7b6c8d3ebaba"
+        }
+    ]
+}

@@ -1,0 +1,27 @@
+# Cloudflare secrets and generated state
+node_modules/
+.dev.vars
+.wrangler/
+.obsidian/
+
+# OpenClaw private workspace files (AGENTS.md stays committed)
+SOUL.md
+USER.md
+IDENTITY.md
+TOOLS.md
+HEARTBEAT.md
+BOOTSTRAP.md
+MEMORY.md
+DREAMS.md
+memory/
+
+# Node and local environments
+node_modules/
+.env
+.env.*
+!.env.example
+.venv/
+
+# Editor / operating system
+.DS_Store
+Thumbs.db
