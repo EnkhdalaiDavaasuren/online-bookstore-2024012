@@ -25,3 +25,9 @@ node_modules/
 # Editor / operating system
 .DS_Store
 Thumbs.db
+
+# TypeScript build and test output
+dist/
+build/
+coverage/
+*.log

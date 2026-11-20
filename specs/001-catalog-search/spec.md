@@ -6,7 +6,7 @@
 
 **Status**: Approved specification
 
-**Input**: User description: Customers can list books, view one book by ID, search by title or author, and list categories. Search is ASCII case-insensitive substring matching through GET /api/books/search?q=..., ordered by ascending book ID and limited to 10. A missing q or empty q= returns HTTP 400 with a JSON error; no matches return []. GET /api/books returns every book ordered by ascending ID. GET /api/books/:id returns a book or HTTP 404 with {"error":"Book not found"}. Book JSON records include book_id, category_id, title, author, isbn, price_cents, and stock. GET /api/categories returns all categories. Initial catalog prices use USD stored as integer cents. Unicode case-folding is out of scope. Leading/trailing whitespace handling remains reserved for CHG-001 after initial implementation and testing.
+**Input**: User description: Customers can list books, view one book by ID, search by title or author, and list categories. Search is ASCII case-insensitive substring matching through GET /api/books/search?q=..., ordered by ascending book ID and limited to 10. A missing q or empty q= returns HTTP 400 with a JSON error; no matches return []. GET /api/books returns every book ordered by ascending ID. GET /api/books/:id returns a book or HTTP 404 with {"error":"Book not found"}. Book JSON records include book_id, category_id, title, author, isbn, price_cents, and stock. GET /api/categories returns all categories. Initial catalog prices use USD stored as integer cents. Unicode case-folding is out of scope. Per approved CHG-001, leading and trailing whitespace is trimmed from q before matching; a query that becomes empty after trimming returns HTTP 400 with the existing JSON error response.
 
 ## Clarifications
 
@@ -18,6 +18,7 @@
 - CHG-005: Book JSON records from list, search, and detail MUST include book_id, category_id, title, author, isbn, price_cents, and stock; isbn remains present as null when absent. An unknown book ID MUST return HTTP 404 with exactly {"error":"Book not found"}. Rationale: make catalog responses stable and testable. Impact: serialization and API tests. Approved by the student on 2026-11-19.
 - CHG-006: Initial catalog currency is USD; monetary values MUST be stored as integer cents. Rationale: use a single currency and avoid floating-point monetary storage. Impact: schema interpretation, seed fixtures, and price serialization. Approved by the student on 2026-11-19.
 - CHG-007: Add GET /api/categories. It MUST return all categories ordered by ascending category_id with category_id, name, and description; it has no pagination/result limit and returns [] when no categories exist. Rationale: satisfy the Lab 1 category-list requirement with deterministic behavior. Impact: adds a category-list story, route, response contract, and tests. Approved by the student on 2026-11-19.
+- CHG-001: Trim leading and trailing whitespace from q before search matching. If trimming produces an empty query, return HTTP 400 with the existing JSON error response. Preserve ASCII case-insensitive substring matching, ascending book ID ordering, and the 10-result maximum. Rationale: ensure incidental boundary whitespace does not change a search. Impact: search validation/normalization, API contract, and regression tests. Approved by the student on 2026-11-20.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -36,6 +37,7 @@ As a customer, I want to search for books by title or author so that I can find 
 3. **AC-SEARCH-03**: **Given** no book title or author contains "unknown-book-xyz", **When** the customer searches for that term, **Then** the response is an empty list ([]).
 4. **AC-SEARCH-04**: **Given** more than 10 books match a query, **When** the customer searches, **Then** the response contains only the first 10 matching books ordered by ascending book ID.
 5. **AC-SEARCH-05**: **Given** q is missing or has an empty value (q=), **When** the customer requests GET /api/books/search, **Then** the response status is HTTP 400 and the body is a JSON error response.
+6. **AC-SEARCH-06**: **Given** the catalog contains matching books, **When** the customer searches with `q=%20%20database%20%20`, **Then** the response contains exactly the same books, in the same order, as `q=database`; if trimming q leaves it empty, the response is HTTP 400 with the existing JSON error response.
 
 ---
 
@@ -88,9 +90,9 @@ As a customer, I want to list book categories so that I can browse the catalog b
 - An empty catalog list returns an empty list.
 - No search matches returns exactly an empty list ([]).
 - More than 10 search matches are reduced to the first 10 in ascending book ID order; the list operation remains unlimited.
-- A missing q parameter or empty q= search query returns HTTP 400 with a JSON error response.
+- A missing q parameter, empty q= value, or a query consisting only of whitespace returns HTTP 400 with a JSON error response after trimming.
 - An unknown book ID returns HTTP 404 with a JSON error response.
-- Leading/trailing whitespace behavior is not specified by this feature; it is reserved for the CHG-001 workflow after testing. No trimming or normalization rule is introduced here.
+- Per approved CHG-001, leading and trailing whitespace is trimmed from q before matching. No other query normalization is introduced.
 
 ## Requirements *(mandatory)*
 
@@ -109,6 +111,7 @@ As a customer, I want to list book categories so that I can browse the catalog b
 - **FR-011**: Each book JSON record returned by GET /api/books, GET /api/books/search, or GET /api/books/:id MUST include book_id, category_id, title, author, isbn, price_cents, and stock; isbn MUST be present with a null value when absent.
 - **FR-012**: The initial catalog currency MUST be USD; monetary values MUST be stored as integer cents.
 - **FR-013**: The system MUST allow customers to list categories through GET /api/categories; all categories MUST be returned once in ascending category_id order, without pagination or a result limit, with category_id, name, and description; an empty category list MUST return [].
+- **FR-SEARCH-06**: The system MUST trim leading and trailing whitespace from q before matching. It MUST preserve ASCII case-insensitive title/author substring matching, ascending book ID ordering, and the 10-result maximum. If trimming produces an empty query, the system MUST return HTTP 400 with the existing JSON error response.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -120,7 +123,7 @@ As a customer, I want to list book categories so that I can browse the catalog b
 
 ### Measurable Outcomes
 
-- **SC-001**: All five search acceptance criteria, AC-SEARCH-01 through AC-SEARCH-05, pass against a catalog with controlled test records.
+- **SC-001**: All six search acceptance criteria, AC-SEARCH-01 through AC-SEARCH-06, pass against a catalog with controlled test records.
 - **SC-002**: A list request returns 100% of catalog books exactly once, in ascending book ID order, regardless of catalog size.
 - **SC-003**: A search response contains 0 to 10 books, ordered by ascending book ID; no-match searches return exactly an empty list ([]).
 - **SC-004**: A known book ID returns that book with the approved JSON fields, while an unknown ID consistently returns HTTP 404 with {"error":"Book not found"}.
@@ -132,5 +135,5 @@ As a customer, I want to list book categories so that I can browse the catalog b
 - Catalog books have unique IDs, titles, and author values available for these customer operations.
 - The approved customer-facing catalog paths are GET /api/books, GET /api/books/:id, GET /api/books/search, and GET /api/categories.
 - The initial catalog currency is USD and monetary amounts are stored as integer cents.
-- Leading/trailing whitespace behavior is intentionally deferred to CHG-001 after initial implementation and testing; this specification makes no decision about trimming or normalization.
+- Per approved CHG-001, leading/trailing whitespace is trimmed from q; whitespace-only q is rejected as HTTP 400. No other query normalization is performed.
 - Creating, updating, deleting, purchasing, or paying for books is outside this feature's scope.

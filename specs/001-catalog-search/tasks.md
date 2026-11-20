@@ -18,7 +18,7 @@
 
 **Purpose**: Establish the approved minimal Cloudflare Worker, TypeScript, and Vitest project. The instructor starter is unavailable; follow the student-authorized minimal setup in plan.md.
 
-- [ ] T001 Create package.json, tsconfig.json, src/index.ts, and vitest.config.ts for the minimal Cloudflare Worker + TypeScript + Vitest setup; preserve the configured Wrangler D1 binding and database name bookstore-db-3.
+- [X] T001 Create package.json, tsconfig.json, src/index.ts, and vitest.config.ts for the minimal Cloudflare Worker + TypeScript + Vitest setup; preserve the configured Wrangler D1 binding and database name bookstore-db-3.
 
 ---
 
@@ -26,9 +26,9 @@
 
 **Purpose**: Test and establish the complete six-table schema and synthetic local fixtures before user-story work.
 
-- [ ] T002 Add Vitest database-integrity tests in tests/integration/database.test.ts proving invalid foreign keys are rejected; categories.name, books.isbn, customers.email, and orders.request_key reject duplicates; order_items rejects duplicate (order_id, book_id); books.stock rejects negatives; monetary columns reject non-integer or negative values; quantity rejects non-integer or nonpositive values; and order status/event type CHECK values are enforced.
-- [ ] T003 Create migrations/0001_initial.sql with categories, books, customers, orders, order_items, and order_events plus all approved PK/FK/UNIQUE/CHECK rules. Canonical field references: data-model.md — categories.category_id, categories.name, categories.description; books.book_id, books.category_id, books.title, books.author, books.isbn, books.price_cents, books.stock; customers.customer_id, customers.full_name, customers.email, customers.created_at; orders.order_id, orders.customer_id, orders.request_key, orders.status, orders.created_at; order_items.order_id, order_items.book_id, order_items.quantity, order_items.unit_price_cents; order_events.order_event_id, order_events.order_id, order_events.event_type, order_events.occurred_at.
-- [ ] T004 Add synthetic catalog category and book fixtures in sql/seed.sql using USD integer cents; do not add real payment information or credentials.
+- [X] T002 Add Vitest database-integrity tests in tests/integration/database.test.ts proving invalid foreign keys are rejected; categories.name, books.isbn, customers.email, and orders.request_key reject duplicates; order_items rejects duplicate (order_id, book_id); books.stock rejects negatives; monetary columns reject non-integer or negative values; quantity rejects non-integer or nonpositive values; and order status/event type CHECK values are enforced.
+- [X] T003 Create migrations/0001_initial.sql with categories, books, customers, orders, order_items, and order_events plus all approved PK/FK/UNIQUE/CHECK rules. Canonical field references: data-model.md — categories.category_id, categories.name, categories.description; books.book_id, books.category_id, books.title, books.author, books.isbn, books.price_cents, books.stock; customers.customer_id, customers.full_name, customers.email, customers.created_at; orders.order_id, orders.customer_id, orders.request_key, orders.status, orders.created_at; order_items.order_id, order_items.book_id, order_items.quantity, order_items.unit_price_cents; order_events.order_event_id, order_events.order_id, order_events.event_type, order_events.occurred_at.
+- [X] T004 Add synthetic catalog category and book fixtures in sql/seed.sql using USD integer cents; do not add real payment information or credentials.
 
 **Checkpoint**: All six tables and synthetic catalog fixtures are available in the planned local schema; all invalid database writes are covered by tests.
 
@@ -42,11 +42,11 @@
 
 ### Tests
 
-- [ ] T005 [P] [US1] Add Vitest API tests in tests/integration/search.test.ts for AC-SEARCH-01 through AC-SEARCH-05, missing q and empty q= JSON errors, book response fields, deterministic ordering, 10-result cap, and route precedence.
+- [X] T005 [P] [US1] Add Vitest API tests in tests/integration/search.test.ts for AC-SEARCH-01 through AC-SEARCH-05, missing q and empty q= JSON errors, book response fields, deterministic ordering, 10-result cap, and route precedence.
 
 ### Implementation
 
-- [ ] T006 [US1] Implement parameterized D1 title/author substring search and GET /api/books/search in src/books.ts and src/index.ts; match the static route before GET /api/books/:id and do not trim or normalize the query. Use fields defined in data-model.md: books.book_id, books.title, books.author, books.category_id, books.isbn, books.price_cents, books.stock.
+- [X] T006 [US1] Implement parameterized D1 title/author substring search and GET /api/books/search in src/books.ts and src/index.ts; match the static route before GET /api/books/:id and do not trim or normalize the query. Use fields defined in data-model.md: books.book_id, books.title, books.author, books.category_id, books.isbn, books.price_cents, books.stock.
 
 **Checkpoint**: Search independently satisfies AC-SEARCH-01 through AC-SEARCH-05 and returns the approved book record fields.
 
@@ -60,11 +60,11 @@
 
 ### Tests
 
-- [ ] T007 [P] [US2] Add Vitest list tests in tests/integration/books-list.test.ts for complete unpaginated results, ascending book_id order, empty catalog, and all approved book JSON fields.
+- [X] T007 [P] [US2] Add Vitest list tests in tests/integration/books-list.test.ts for complete unpaginated results, ascending book_id order, empty catalog, and all approved book JSON fields.
 
 ### Implementation
 
-- [ ] T008 [US2] Implement parameterized D1 listing and GET /api/books in src/books.ts and src/index.ts; return every row ordered by book ID with the approved representation. Use data-model.md fields: books.book_id, books.category_id, books.title, books.author, books.isbn, books.price_cents, books.stock.
+- [X] T008 [US2] Implement parameterized D1 listing and GET /api/books in src/books.ts and src/index.ts; return every row ordered by book ID with the approved representation. Use data-model.md fields: books.book_id, books.category_id, books.title, books.author, books.isbn, books.price_cents, books.stock.
 
 **Checkpoint**: The list endpoint passes its independent tests without changing search behavior.
 
@@ -78,11 +78,11 @@
 
 ### Tests
 
-- [ ] T009 [P] [US3] Add Vitest detail tests in tests/integration/book-details.test.ts for known IDs, all approved book JSON fields, and the exact HTTP 404 JSON body.
+- [X] T009 [P] [US3] Add Vitest detail tests in tests/integration/book-details.test.ts for known IDs, all approved book JSON fields, and the exact HTTP 404 JSON body.
 
 ### Implementation
 
-- [ ] T010 [US3] Implement the parameterized D1 lookup and GET /api/books/:id in src/books.ts and src/index.ts; return the approved book fields and exact not-found body. Use data-model.md fields: books.book_id, books.category_id, books.title, books.author, books.isbn, books.price_cents, books.stock.
+- [X] T010 [US3] Implement the parameterized D1 lookup and GET /api/books/:id in src/books.ts and src/index.ts; return the approved book fields and exact not-found body. Use data-model.md fields: books.book_id, books.category_id, books.title, books.author, books.isbn, books.price_cents, books.stock.
 
 **Checkpoint**: Detail lookup passes known/unknown ID tests and does not capture the static search route.
 
@@ -96,11 +96,11 @@
 
 ### Tests
 
-- [ ] T011 [P] [US4] Add Vitest category-list tests in tests/integration/categories.test.ts for ascending order, all approved fields, no pagination/result cap, and empty-list behavior.
+- [X] T011 [P] [US4] Add Vitest category-list tests in tests/integration/categories.test.ts for ascending order, all approved fields, no pagination/result cap, and empty-list behavior.
 
 ### Implementation
 
-- [ ] T012 [US4] Implement the parameterized D1 category listing in src/books.ts and register GET /api/categories in src/index.ts using data-model.md fields categories.category_id, categories.name, categories.description.
+- [X] T012 [US4] Implement the parameterized D1 category listing in src/books.ts and register GET /api/categories in src/index.ts using data-model.md fields categories.category_id, categories.name, categories.description.
 
 **Checkpoint**: Category listing passes its independent tests and does not alter book routes.
 
@@ -110,9 +110,9 @@
 
 **Purpose**: Run the actual migration, test suite, and HTTP API verification against the configured local D1 database.
 
-- [ ] T013 Apply migrations/0001_initial.sql and sql/seed.sql to local D1 database bookstore-db-3 using Wrangler with --local; run PRAGMA foreign_key_check and the database constraint tests; record actual output in specs/001-catalog-search/quickstart.md. Do not use remote D1.
-- [ ] T014 Run npx vitest run and confirm every approved spec acceptance criterion and database constraint test passes; record the real command and results in specs/001-catalog-search/quickstart.md.
-- [ ] T015 Start the Worker locally against configured D1 database bookstore-db-3 and verify GET /api/books, GET /api/books/:id, GET /api/books/search, and GET /api/categories, including static search-route precedence and exact response behavior; record actual results in specs/001-catalog-search/quickstart.md. Do not deploy.
+- [X] T013 Apply migrations/0001_initial.sql and sql/seed.sql to local D1 database bookstore-db-3 using Wrangler with --local; run PRAGMA foreign_key_check and the database constraint tests; record actual output in specs/001-catalog-search/quickstart.md. Do not use remote D1.
+- [X] T014 Run npx vitest run and confirm every approved spec acceptance criterion and database constraint test passes; record the real command and results in specs/001-catalog-search/quickstart.md.
+- [X] T015 Start the Worker locally against configured D1 database bookstore-db-3 and verify GET /api/books, GET /api/books/:id, GET /api/books/search, and GET /api/categories, including static search-route precedence and exact response behavior; record actual results in specs/001-catalog-search/quickstart.md. Do not deploy.
 
 ---
 

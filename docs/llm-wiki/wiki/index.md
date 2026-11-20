@@ -1,5 +1,7 @@
 # Wiki index
 
-- [Design decisions](design-decisions.md) — Not verified yet.
-- [Test results and lessons](test-results-and-lessons.md) — Not verified yet.
-- [Wiki log](log.md) — Operations record.
+## Online Bookstore
+
+- [[design-decisions|Design decisions]] — Approved catalog-search behavior, local D1 state, and the University Textbook Store relational design. Sources: `docs/llm-wiki/raw/specifications/001-catalog-search-approved.md`, `docs/llm-wiki/raw/specifications/004-university-textbook-store-approved.md`, `docs/llm-wiki/raw/projects/catalog-search-verification.md`.
+- [[test-results-and-lessons|Test results and lessons]] — Recorded migration/seed outcomes, foreign-key check, Vitest/typecheck results, and CHG-001 regression evidence. Source: `docs/llm-wiki/raw/projects/catalog-search-verification.md`.
+- [[log|Wiki log]] — Append-only ingestion and lint operation history. Source inventory: `docs/llm-wiki/raw/proposal.md` and the four evidence snapshots listed above.

@@ -1,12 +1,16 @@
 # Online Bookstore Change Log
 
-This log records approved specification changes and their rationale and impact. CHG-001 remains reserved; it is not an approved behavior change in this phase.
+This log records approved specification changes and their rationale and impact.
 
-## CHG-001 — Reserved for post-test whitespace clarification
+## CHG-001 — Trim search-query boundary whitespace
 
-- **Status**: Reserved; no behavior approved or added.
-- **Scope**: After the initial implementation and testing, propose the whitespace rule discovered by that exercise.
-- **Impact**: None in the current specification or task list. No trimming or normalization is introduced now.
+- **Status**: Approved 2026-11-20.
+- **Observed problem**: Against local D1 `bookstore-db-3`, `GET /api/books/search?q=database` returned HTTP 200 with the first 10 matching books, while `GET /api/books/search?q=%20%20database%20%20` returned HTTP 200 with `[]`. The existing implementation matched the supplied spaces literally.
+- **Decision**: Trim leading and trailing whitespace from `q` before matching. Preserve ASCII case-insensitive title/author substring matching, ascending `book_id` order, and the 10-result maximum. If trimming produces an empty value, return HTTP 400 with the existing JSON error response.
+- **Rationale**: Prevent incidental boundary whitespace from changing an otherwise identical search, while retaining explicit validation and all other approved search semantics.
+- **Specification change**: Add FR-SEARCH-06 and AC-SEARCH-06 requiring boundary trimming and identical ordered results for `database` and `%20%20database%20%20`; whitespace-only input remains invalid.
+- **Test requirement**: Add regression coverage comparing both query responses for exact ordered equality, plus a whitespace-only query asserting HTTP 400 and the existing JSON error object.
+- **Impact**: Update the feature spec, API contract, search API tests, and search handler validation/normalization. No database schema or migration change.
 
 ## CHG-002 — Search endpoint path
 

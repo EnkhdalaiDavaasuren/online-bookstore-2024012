@@ -1,6 +1,6 @@
 # Relational Data Model — Online Bookstore Lab 1
 
-This proposed model contains all six common tables required by the Lab 1 handout. The initial migration is planned at migrations/0001_initial.sql. No migration file is created in this planning phase. The Catalog and Search feature implements only catalog APIs; the customer/order tables are schema baseline only until separately approved behavior is specified.
+This proposed model contains all six common tables required by the Lab 1 handout. The initial migration is planned at migrations/0001_initial.sql. No migration file is created in this documentation task. Feature 001 exposes the approved book list, book detail, book search, and category list APIs; customer/order behaviors remain outside the API implementation. Initial catalog currency is USD, and monetary values are stored as integer cents.
 
 ## ERD and cardinality
 
@@ -61,7 +61,7 @@ erDiagram
 
 ## Table definitions and constraints
 
-Surrogate identifiers use INTEGER PRIMARY KEY; order_items uses the composite primary key (order_id, book_id). Foreign keys use ON DELETE RESTRICT to preserve referenced catalog and order history. All money is stored as integer minor units; the proposed columns are price_cents and unit_price_cents. No total amount is stored because it is derivable from order_items.
+Surrogate identifiers use INTEGER PRIMARY KEY; order_items uses the composite primary key (order_id, book_id). Foreign keys use ON DELETE RESTRICT to preserve referenced catalog and order history. All monetary values are USD stored as integer cents in price_cents and unit_price_cents. No total amount is stored because it is derivable from order_items.
 
 ### categories
 
@@ -76,7 +76,7 @@ Surrogate identifiers use INTEGER PRIMARY KEY; order_items uses the composite pr
 - title: TEXT NOT NULL.
 - author: TEXT NOT NULL; one scalar author text value per the approved Lab 1 decision.
 - isbn: TEXT NULL UNIQUE; multiple NULL values may represent books without an ISBN.
-- price_cents: INTEGER NOT NULL CHECK(typeof(price_cents) = 'integer' AND price_cents >= 0).
+- price_cents: INTEGER NOT NULL CHECK(typeof(price_cents) = 'integer' AND price_cents >= 0); represents USD cents.
 - stock: INTEGER NOT NULL DEFAULT 0 CHECK(stock >= 0) and CHECK(typeof(stock) = 'integer').
 
 ### customers
@@ -100,7 +100,7 @@ Surrogate identifiers use INTEGER PRIMARY KEY; order_items uses the composite pr
 - order_id: INTEGER NOT NULL, FOREIGN KEY REFERENCES orders(order_id) ON DELETE RESTRICT.
 - book_id: INTEGER NOT NULL, FOREIGN KEY REFERENCES books(book_id) ON DELETE RESTRICT.
 - quantity: INTEGER NOT NULL CHECK(typeof(quantity) = 'integer' AND quantity > 0).
-- unit_price_cents: INTEGER NOT NULL CHECK(typeof(unit_price_cents) = 'integer' AND unit_price_cents >= 0); snapshots the catalog price at order time.
+- unit_price_cents: INTEGER NOT NULL CHECK(typeof(unit_price_cents) = 'integer' AND unit_price_cents >= 0); snapshots the USD catalog price in cents at order time.
 - PRIMARY KEY(order_id, book_id), which also provides the UNIQUE constraint for the order/book pair.
 
 ### order_events
@@ -129,3 +129,11 @@ Each relation describes one entity or one relationship. Every non-key attribute 
 - Foreign-key indexes may be added for books.category_id, orders.customer_id, order_items.book_id, and order_events.order_id if local tests or query plans show a need. The order_items composite primary key begins with order_id.
 - Search must remain parameterized, use ASCII case-insensitive substring semantics, return rows by ascending book_id, and limit to 10. Do not trim or normalize search input; CHG-001 is deferred until after initial testing.
 - A future purchase feature must atomically coordinate order, item, event, and stock changes, and must verify the idempotent request_key behavior. This data model alone does not implement that workflow.
+
+## Approved API and response mapping
+
+- GET /api/books returns all book records in ascending book_id order without pagination or a result limit.
+- GET /api/books/:id returns a matching book record; an unknown ID returns HTTP 404 with exactly {"error":"Book not found"}.
+- GET /api/books/search uses q for ASCII case-insensitive title/author substring matching, ascending book_id order, and a 10-record maximum. Missing q and empty q= both return HTTP 400 with a JSON error response. The exact search-error object keys/message are not specified. The static search route is handled before the dynamic book-ID route. Search input is not trimmed or normalized; CHG-001 remains deferred.
+- Every book JSON record includes book_id, category_id, title, author, isbn, price_cents, and stock; isbn remains present with a null value when absent. price_cents uses USD integer cents.
+- GET /api/categories returns all categories in ascending category_id order, with category_id, name, and description, without pagination or a result limit; an empty category table returns [].
