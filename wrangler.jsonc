@@ -2,6 +2,10 @@
     "name": "online-bookstore-2024012",
     "main": "src/index.ts",
     "compatibility_date": "2026-11-19",
+    "assets": {
+        "directory": "./public",
+        "run_worker_first": ["/api/*"]
+    },
     "d1_databases": [
         {
             "binding": "DB",

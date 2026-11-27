@@ -119,6 +119,14 @@ As a customer, I want to list book categories so that I can browse the catalog b
 - **Category**: A catalog classification listed through GET /api/categories with category_id, name, and description.
 - **Search query**: Customer-provided text matched as an ASCII case-insensitive substring against book titles and authors.
 
+### Lab 0 environment and Lab 1 browser requirements
+
+- **CHG-008 / AC-HEALTH-01**: `GET /api/health` runs `SELECT 1 AS ok` on the configured D1 binding and returns HTTP 200 with `{"status":"ok","database":{"ok":1}}` when D1 is available. A failed database check returns HTTP 503 with a JSON error. The React shell displays the check result.
+- **CHG-008 / AC-UI-01**: Opening the React app loads the catalog through the existing Worker API. Each card shows the title, author, USD price, and stock or a sold-out message. The browser build emits `public/assets/app.js`.
+- **CHG-008 / AC-UI-02**: The search form sends a request to `GET /api/books/search` and renders the returned records in API order. An empty result displays an empty state. The form prevents overlapping submissions and supports returning to the full catalog.
+- **CHG-008 / AC-UI-03**: Selecting a book fetches its details from `GET /api/books/:id`. The catalog, search, and detail views display loading and request errors, and closing details returns to the current results.
+- **CHG-008 scope**: The existing API field names, response shapes, search behavior, and database schema apply. The University Textbook Store extension remains at the approved design stage during Lab 1.
+
 ## Success Criteria *(mandatory)*
 
 ### Measurable Outcomes

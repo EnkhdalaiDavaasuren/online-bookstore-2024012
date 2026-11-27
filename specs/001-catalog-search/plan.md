@@ -91,3 +91,8 @@ No constitution violations or additional architectural projects are proposed. Al
 ## Remaining contract detail
 
 The spec requires a JSON error response for missing/empty q but does not prescribe its exact JSON keys or message. Tests should verify a valid JSON error response without assuming an unapproved literal body.
+# Lab 0 and Lab 1 browser follow-up
+
+CHG-008 addresses the remaining handout requirements for the React browser shell, health evidence, and catalog UI. Use React and TypeScript in `client/`, bundle with esbuild, and serve same-origin files through Wrangler assets. Read the existing API contract for catalog fields and response shapes. The health route uses a read-only D1 query. D1 remains authoritative for catalog, price, and stock.
+
+Use the existing Node 26 environment and local D1. Add UI checks alongside the existing Worker integration suite. Compare SQL output, HTTP responses, and the browser's Network view. Document browser and test results and map them to the approved acceptance criteria. The University Textbook Store spec and ERD remain Lab 1 deliverables.

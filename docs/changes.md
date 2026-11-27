@@ -1,5 +1,12 @@
 # Online Bookstore Change Log
 
+## CHG-008 — Lab 0 health check and Lab 1 browser catalog
+
+- Status approved through T016–T021 on 2026-11-27.
+- The minimal Worker starter needed a D1 health check, a React shell, and a browser catalog to meet the Lab 0 and Lab 1 handouts.
+- The browser uses the existing catalog, search, and detail API. The health route checks the configured D1 binding. The approved schema and University Textbook Store design remain the references for database work.
+- Acceptance criteria are recorded in `specs/001-catalog-search/spec.md`. Verification is mapped in `docs/traceability.md`.
+
 This log records approved specification changes and their rationale and impact.
 
 ## CHG-001 — Trim search-query boundary whitespace

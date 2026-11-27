@@ -16,6 +16,18 @@ export default {
     const url = new URL(request.url);
     const path = url.pathname;
 
+    if (path === "/api/health") {
+      try {
+        const database = await env.DB.prepare("SELECT 1 AS ok").first<{ ok: number }>();
+        if (database?.ok === 1) {
+          return json({ status: "ok", database });
+        }
+      } catch {
+        return json({ error: "Database unavailable" }, 503);
+      }
+      return json({ error: "Database unavailable" }, 503);
+    }
+
     // Keep this exact static route before the dynamic /api/books/:id path.
     if (path === "/api/books/search") {
       const query = url.searchParams.get("q");

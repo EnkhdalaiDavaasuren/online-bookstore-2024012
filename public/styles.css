@@ -1,0 +1,16 @@
+:root { color: #191e1b; background: #f4f6f0; font: 1rem/1.5 system-ui, sans-serif; }
+* { box-sizing: border-box; }
+main { max-width: 68rem; margin: auto; padding: 2rem 1rem; }
+header { border-bottom: 1px solid #c7d2c8; margin-bottom: 2rem; }
+h1 { font: bold clamp(2rem, 6vw, 4rem)/1.1 Georgia, serif; margin: 0; }
+h2 { line-height: 1.2; }
+form { display: flex; flex-wrap: wrap; align-items: end; gap: .75rem; margin-bottom: 1.5rem; }
+label { display: grid; gap: .35rem; flex: 1 1 15rem; }
+input, button { font: inherit; border-radius: .35rem; padding: .55rem .8rem; border: 1px solid #66796a; }
+button { background: #235940; color: #fff; cursor: pointer; }
+button:disabled { opacity: .6; cursor: default; }
+:focus-visible { outline: 3px solid #a14b11; outline-offset: 3px; }
+.catalog { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: 1rem; }
+article, .detail { background: white; border: 1px solid #c7d2c8; border-radius: .6rem; padding: 1.25rem; }
+article h2 { margin-top: 0; font: bold 1.4rem/1.2 Georgia, serif; }
+[role="alert"] { color: #9d281c; }

@@ -150,3 +150,13 @@ After T001 and schema/API design are settled, work may proceed on these separate
 ### Approval Boundary
 
 This file plans implementation only. It does not authorize or perform implementation. Obtain separate implementation approval before creating project setup files, source/test code, the SQL migration, or seed data. All database execution remains local to bookstore-db-3; never deploy as part of this feature.
+# Lab 0 and Lab 1 browser follow-up
+
+CHG-008 follows the original backend tasks. The student approved T016–T021 on November 27, 2026.
+
+- [X] T016 Configure React, TypeScript, esbuild, and Wrangler static assets in `package.json`, `package-lock.json`, `tsconfig.json`, `wrangler.jsonc`, and `.gitignore`. Add build and Worker type generation commands. Track source files and ignore `public/assets/app.js`.
+- [X] T017 Add the D1 health endpoint in `src/index.ts` and cover successful and failed health checks in `tests/integration/` (AC-HEALTH-01).
+- [X] T018 Implement the React shell, catalog, search form, and detail view in `client/` with `public/index.html` and `public/styles.css`. Use the existing same-origin Worker API (AC-HEALTH-01, AC-UI-01 through AC-UI-03).
+- [X] T019 Fix the local Vitest D1 setup failure and run the Worker suites and React UI tests. Cover catalog loading, search submission and empty results, detail, and request failures (AC-UI-01 through AC-UI-03).
+- [X] T020 Run type generation, typecheck, build, tests, and local D1 and HTTP checks. Verify the catalog, search and detail in a browser and capture the Lab 0 screenshot and Lab 1 Network evidence.
+- [X] T021 Record the evidence and acceptance-criteria traceability. Run the Lab 1 convergence review and update the wiki progress tracker.

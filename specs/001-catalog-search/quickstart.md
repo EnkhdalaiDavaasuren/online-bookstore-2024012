@@ -88,3 +88,10 @@ The server was bound to loopback only.
 - After trimming q in the search route, `npx vitest run` exited 0: **5 files passed, 24 tests passed**, including **9 search tests**. `npm run typecheck` (`tsc --noEmit`) exited 0.
 - With `npm run dev -- --ip 127.0.0.1` using local D1 `bookstore-db-3`, both `GET /api/books/search?q=database` and `GET /api/books/search?q=%20%20database%20%20` returned HTTP **200**. A PowerShell check of `curl.exe` response bodies printed `EXACT_BODY_MATCH: True`; each body contained 10 books in IDs 1–10 ascending.
 - `GET /api/books/search?q=%20%20%20` returned HTTP **400** with `{"error":"Search query is required"}`. The Worker was stopped after verification. No schema or migration changes were made.
+## CHG-008 verification on November 27, 2026
+
+- `npm run generate-types`, `npm run typecheck`, and `npm run build` passed. esbuild emitted `public/assets/app.js`.
+- `npm test` passed 26 Worker/D1 tests and 2 React UI tests. The Miniflare integration harness sets a disposable persistence directory per suite and applies the migration to each isolated database.
+- Local Wrangler executed `SELECT 1 AS ok`, the database search query, and `PRAGMA foreign_key_check`. The results were 1, book IDs 1–10, and zero violation rows.
+- Chrome verified 14 initial catalog cards, the health status, 10 padded-query matches whose titles matched the API response, the detail view, restoration of the search results, the empty state, and restoration of the full catalog. Browser requests returned HTTP 200 and there were zero page errors.
+- The convergence review found local evidence for AC-HEALTH-01, AC-UI-01 through AC-UI-03, and the existing catalog acceptance criteria. See `docs/traceability.md` and `docs/llm-wiki/wiki/evidence/`.
